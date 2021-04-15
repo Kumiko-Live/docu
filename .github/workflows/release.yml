@@ -37,7 +37,9 @@ jobs:
       - name: Get release details
         run: |
           echo "TAG_SUBJECT=$(git tag -l --format='%(contents:subject)' ${{env.TAG_NAME}})" >> $GITHUB_ENV
-          echo "TAG_BODY=$(git tag -l --format='%(contents:body)' ${{env.TAG_NAME}})" >> $GITHUB_ENV
+          echo 'TAG_BODY<<EOF' >> $GITHUB_ENV
+          echo "$(git tag -l --format='%(contents:body)' ${{env.TAG_NAME}})" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
 
       # Load the compiled PDF
       - name: Load PDF
