@@ -28,7 +28,7 @@ jobs:
       - name: Compile TeX
         uses: dante-ev/latex-action@latest
         with:
-          root_file: doc.tex
+          root_file: Dokumentation.tex
           args: -xelatex
 
       # Stores the final PDF
