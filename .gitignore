@@ -1,3 +1,6 @@
+# Auto generated LFS hooks
+.githooks/pre-push
+
 # Temporary files
 *~
 
