@@ -1,0 +1,20 @@
+# Macro for all file types that should be treated as ZIP archives.
+[attr]zip filter=zip
+
+# Macro for all binary files that should use Git LFS.
+[attr]bin -text filter=lfs diff=lfs merge=lfs lockable
+
+# Krita
+*.[kK][rR][aA] zip
+
+# Images
+*.[jJ][pP][gG] bin
+*.[jJ][pP][eE][gG] bin
+*.[pP][nN][gG] bin
+*.[aA][pP][nN][gG] bin
+*.[gG][iI][fF] bin
+*.[bB][mM][pP] bin
+*.[tT][gG][aA] bin
+*.[tT][iI][fF] bin
+*.[tT][iI][fF][fF] bin
+*.[sS][vV][gG][zZ] bin
