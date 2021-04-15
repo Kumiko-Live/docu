@@ -1,6 +1,7 @@
 # Kumiko Live! documentation
-[![Build](https://github.com/Kumiko-Live/docu/actions/workflows/build.yml/badge.svg)](https://github.com/Kumiko-Live/docu/actions/workflows/build.yml)
+[![DOI](https://zenodo.org/badge/358048494.svg)](https://zenodo.org/badge/latestdoi/358048494)
 [![License](https://img.shields.io/badge/%E2%9A%96%EF%B8%8F-CC%20BY--NC--ND%204.0-brightgreen)](https://creativecommons.org/licenses/by-nc-nd/4.0)
+[![Build](https://github.com/Kumiko-Live/docu/actions/workflows/build.yml/badge.svg)](https://github.com/Kumiko-Live/docu/actions/workflows/build.yml)
 [![Chat](https://discord.com/api/guilds/813738237864312842/widget.png?style=shield)](https://discord.gg/jt4dpvzA58)
 [![YouTube](https://img.shields.io/endpoint?url=https%3A%2F%2Frunkit.io%2Fsuk0m8u%2Fyoutube-subscribers-badge%2Fbranches%2Fmaster%3Fid%3DUCGcClcnm7Y0-jWSeSV5xnKw%26key%3DAIzaSyDmc6HmurAU4Hf5WvuxSTsym18SjR7fguc)](https://www.youtube.com/channel/UCGcClcnm7Y0-jWSeSV5xnKw)
 
