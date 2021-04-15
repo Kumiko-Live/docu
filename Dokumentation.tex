@@ -1,0 +1,484 @@
+\documentclass[a4paper, 12pt]{article}
+
+% Dependencies
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fontspec}
+\usepackage[ngerman]{babel}
+\usepackage{abstract}
+\usepackage[nottoc]{tocbibind}
+\usepackage{hyperref}
+\usepackage[pagestyles,raggedright]{titlesec}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{textcomp}
+\usepackage{longtable}
+\usepackage{listings}
+\usepackage[backend=biber]{biblatex}
+\usepackage{fancyvrb}
+
+% Ressources
+\addbibresource{Referenzen.bib}
+
+% Header
+\title{Animation eines 3D-Avatars mittels Bewegungserkennung}
+\author{
+    \Large Vivien Richter \\ [2mm]
+    \normalsize \href{https://www.htwk-leipzig.de}{HTWK Leipzig} \\ \texttt{\href{mailto:vivien.richter@stud.htwk-leipzig.de}{vivien.richter@stud.htwk-leipzig.de}}}
+\date{\today{}}
+\newpagestyle{main}{
+   \sethead[\thepage][][Animation eines 3D-Avatars mittels Bewegungserkennung]{Animation eines 3D-Avatars mittels Bewegungserkennung}{}{\thepage}
+   \headrule
+   \setfoot[\href{mailto:vivien.richter@stud.htwk-leipzig.de}{Vivien Richter}][\today{}][\href{https://www.htwk-leipzig.de}{HTWK Leipzig}]{\href{mailto:vivien.richter@stud.htwk-leipzig.de}{Vivien Richter}}{\today{}}{\href{https://www.htwk-leipzig.de}{HTWK Leipzig}}
+   \footrule
+}
+
+% Body
+\begin{document}
+\pagestyle{main}
+\maketitle
+\begin{abstract}
+    Dies ist die Dokumentation zur selbstgewählten Umsetzungsvariante
+    der 3D-Modellierung und Animation eines Avatars
+    im Modul \glqq{}Computeranimation\grqq{} an der HTWK Leipzig.
+\end{abstract}
+\mbox{}\hrule\mbox{}
+\tableofcontents
+\clearpage
+\listoffigures % Abbildungsverzeichnis
+\newpage
+
+\section{Inspiration \& Ziel}
+\label{sec:inspiration}
+Mein Interesse an Computeranimation wurde überhaupt erst durch
+den Vocaloid\footnote{virtuelle Sänger(in) mit synthetischer Stimme und meistens auch einem 3D-Modell} Hatsune Miku
+und die VTuberin\footnote{virtuelle YouTube Unterhalter(in)} Kizuna AI geweckt.
+\\\\\\
+\begin{minipage}[c]{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Bilder/Vorbilder/Hatsune Miku.jpg}
+    \captionof{figure}{Miku Expo Europa 2018\cite{idol-hatsune-miku}}
+\end{minipage}
+\begin{minipage}[c]{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Bilder/Vorbilder/Kizuna AI.png}
+    \captionof{figure}{A.I.Channel\cite{idol-kizuna-ai}}
+\end{minipage}
+\\\\\\Daher habe ich mir vorgenommen,
+selbst einmal einen 3D Avatar zu erstellen
+und diesen möglichst komnplett mittels Bewegungserkennung zu animieren.
+\paragraph{Die Möglichkeiten} wurden hierbei hauptsächlich durch
+meine eigenen Ressourcen
+\begin{itemize}
+    \item 2x handelsüblicher Mittelklasse-Computer
+    \item 1x Mikrofon
+    \item 1x 720p Webcam
+    \item 1x gebrauchte Kinect v1\footnote{ein Produkt der Firma Microsoft})
+\end{itemize}
+begrenzt.
+\textit{Eine ausfühliche Auflistung sämtlicher verwendeter Hardware befindet sich im letzten Kapitel\ref{sec:hardware}.}
+\\Sehr kurzfristig hat sich allerdings noch ein Leap Motion Controller\footnote{ein Produkt der Firma ultraleap}
+als Leihgabe durch Prof. Varanasi angeboten.
+An dieser Stelle vielen Dank dafür.
+\newpage
+
+\section{Das Modell}
+\label{sec:model}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.75]{Bilder/Character_sheet.png}
+    \caption{Charakterbogen}
+\end{figure}
+
+\subsection{Der Körper und das Gesicht}
+\label{subsec:body}
+Der Körper selbst sowie dessen Skelett
+sind in VRoid Studio\cite{vroid-studio} bereits vorgegeben,
+weshalb diese lediglich aus 2 Grundformen ausgewählt werden.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Modellierung/Grundform.png}
+    \caption{Auswahl der Grundform des Körpers}
+\end{figure}
+\\\textit{Im Folgenden werde ich alles Weitere anhand meines bereits erstellten Modells erläutern.}
+\newpage
+Trotz der vorgegebenen Grundform existieren Parameter,
+mit denen man auf den Körperbau und die Gesichtsform Einfluss nehmen kann.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Modellierung/Körper.png}
+    \caption{Anpassung des Körpers}
+\end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Modellierung/Gesicht.png}
+    \caption{Anpassung der Gesichtsform}
+\end{figure}
+\newpage
+
+\subsection{Die Kleidung}
+\label{subsec:clothes}
+Die Kleidung ist in Form einer begrenzten Auswahl vorgegeben.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Modellierung/Kleidung.png}
+    \caption{Auswahl der Kleidung}
+\end{figure}
+\\Allerdings lässt sich ihre Textur ersetzen.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Texturierung/Kleidung.png}
+    \caption{Textur der Kleidung}
+\end{figure}
+\newpage
+Ihre Texturierung erstreckt sich teilweise bis auf den Körper.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Texturierung/Körper.png}
+    \caption{Textur des Körpers}
+\end{figure}
+\newpage
+
+\subsection{Die Haare}
+\label{subsec:hair}
+Für die Haare wird jede Strähne einzeln modelliert.
+Dazu erstellt man zunächst eine oder mehrere Haar-Gruppen,
+die man entsprechend an die gewünschte Grundform anpasst.
+Die Form der Gruppe bildet dann das Grundgerüst für die Form der Haare.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Modellierung/Haare 1.png}
+    \caption{Gruppe als Grundgerüst}
+\end{figure}
+\\Denn die Modellierung der einzelnen Haarsträhnen innnerhalb einer Gruppe
+erfolgt ausschließlich als 2-dimensionaler Pfad,
+der selbst erstellt werden muss\cite{tut-hair}.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Modellierung/Haare 2.png}
+    \caption{Einzelne Haarsträhne}
+\end{figure}
+\newpage
+Das Rigging der Haare muss ebenfalls selbst vorgenommen werden.
+Hierbei werden einige Einstellungsmöglichkeiten angeboten.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Rigging/Haare 1.png}
+    \caption{Rigging einer langen Haarsträhne}
+\end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Rigging/Haare 2.png}
+    \caption{Rigging einer mittellangen Haarsträhne}
+\end{figure}
+\newpage
+
+\subsection{Die Fuchsohren}
+\label{subsec:foxears}
+Die Fuchsohren musste ich aus Haaren erstellen.
+Dabei habe ich jedes Fuchsohr jeweils aus einer einzelnen Haarsträhne erstellt.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Modellierung/Fuchsohr 1.png}
+    \caption{Haarsträhnen-Pfad als Grundriss eines einzelnen Fuchsohr}
+\end{figure}
+\\Um die entsprechend charakteristische Form zu erzielen
+musste neben ein paar allgemeinen Einstellungen
+auch den Kurvenverlauf der aus dem Pfad generierten Dicke entsprechend anpassen\cite{tut-foxears}.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Modellierung/Fuchsohr 2.png}
+    \caption{Kurvenverlauf zur Formgebung eines einzelnen Fuchsohr}
+\end{figure}
+\newpage
+Auch die Fuchsohren haben ein einfaches Rigging erhalten, um sie etwas beweglich wirken zu lassen.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Rigging/Fuchsohr.png}
+    \caption{Einfaches Rigging der Fuchsohren}
+\end{figure}
+\\Leider ist es derzeit nicht möglich,
+die Fuchsohren gezielt zu animieren.
+Der Grund dafür liegt vermutlich darin begründet,
+dass VRoid Studio lediglich
+den Export als VRM\footnote{a file format for handling 3D humanoid avatar (3D model) data for VR applications\cite{vrm-page}}-Modell anbietet
+und dessen Skelett nach aktueller Spezifikation\cite{vrm-spec-head} keine Fuchsohren unterstützt.
+\newpage
+
+\subsection{Die Brille}
+\label{subsec:glasses}
+Wie die Fuchsohren und alle anderen möglichen Accessoires muss auch die Brille aus Haaren erstellt werden\cite{tut-glasses1}\cite{tut-glasses2}.
+Hierbei habe ich das Gestell und die Bügel der Brille als einzelne Haarsträhnen innerhalb von 2 verschiedenen Haargruppen erstellt.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Modellierung/Brille.png}
+    \caption{Das Gestell der Brille}
+\end{figure}
+\\Gestell und Bügel teilen sich eine gemeinsame Textur\cite{tut-glasses2},
+welche ich neutral gehalten habe,
+um die Farbgebung und Schattierung sowie Reflektion
+über die Material-Einstellungen frei wählen zu können.
+\newpage
+
+\subsection{Eigene Texturen}
+\label{subsec:textures}
+Zum Bearbeiten oder Erstellen von Texturen habe ich
+die Grafik-Anwendung Krita\cite{krita} verwendet.
+\paragraph{Die Iris} der Augen habe ich auf Basis der Vorlage komplett neu erstellt.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.2]{Bilder/Texturen/Iris.png}
+    \caption{Iris-Textur}
+\end{figure}
+\\\\
+\begin{minipage}[c]{0.5\textwidth}
+    \paragraph{Das Haar} habe ich neu coloriert.
+    \centering
+    \includegraphics[width=0.6\textwidth]{Bilder/Texturen/Haar.png}
+    \captionof{figure}{Haar-Textur}
+\end{minipage}
+\begin{minipage}[c]{0.5\textwidth}
+    \paragraph{Die Brille} habe ich selbst erstellt.
+    \centering
+    \includegraphics[width=0.6\textwidth]{Bilder/Texturen/Brille.png}
+    \captionof{figure}{Textur der Brille}
+\end{minipage}
+\newpage
+
+\subsection{Weitere Anpassungen}
+\label{subsec:misc}
+Es gibt auch noch einige allgemeinere Einstellungsmöglichkeiten,
+die das gesammte Modell betreffen.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Modellierung/Allgemein.png}
+    \caption{Allgemeine Einstellungen}
+\end{figure}
+\\Darüber hinaus existiert von VRM eine Standard-Implementierung,
+welche VRM-Modelle in Unity importieren und auch wieder daraus exportieren kann\cite{univrm}.
+Auf diese Weise wären auch weitere Modifikationen denkbar.
+
+\subsection{Zwischenbilanz}
+\label{subsec:model-result}
+Über die Modellierung mittels VRoid Studio\cite{vroid-studio} lässt sich aus meiner Sicht sagen,
+dass sich damit sehr schnell gute Ergebnisse erzielen lassen,
+sofern es sich um die Modellierung einfacher humanoider Avatare handelt.
+\paragraph{Was mich fasziniert hat} war der minimalistische Ansatz aus Haaren theoretisch alles modellieren zu können.
+Selbst Kleidung ließe sich vermutlich daraus modellieren.
+Das empfinde ich als äußerst kreativ.
+\paragraph{Die Grenzen} zeigen sich allerdings bereits sehr schnell beim Skelett.
+Hier würde ich mir eine Erweiterung der VRM\cite{vrm-page}-Spezifikation wünschen.
+\newpage
+
+\section{Animation}
+\label{sec:animation}
+Im Export-Bereich von VRoid Studio\cite{vroid-studio} besteht bereits die Möglichkeit,
+ein paar vordefinierte Animationen zu testen.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Animation/Grundlegend.png}
+    \caption{Grundlegende Animationen in VRoid Studio\cite{vroid-studio}}
+\end{figure}
+\\Im Folgenden werde ich jedoch die Animation mittels
+Gesichts-, Hand-, und Skeletterkennung anhand verschiedener Ansätze beleuchten.
+Dazu gibt es eine Reihe an Möglichkeiten.
+Die für mich praktikabelste Lösung war die primäre Verwendung der Software VSeeFace\cite{vseeface},
+da sie VRM unterstützt und gezielt für VTuber entwickelt wurde.
+\newpage
+
+\subsection{Gesichtserkennung}
+\label{subsec:facetracking}
+VSeeFace\cite{vseeface} bringt bereits eine eingebaute Gesichtserkennung mit,
+welche die Webcam des Anwenders nutzt.
+Jedoch hatte VSeeFace\cite{vseeface} leider Schwierigkeiten,
+meine im Notebook eingebaute Webcam mittels Wine\cite{wine}
+unter Manjaro\cite{manjaro} anzusteuern.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Animation/VSeeFace Wine Kamera Error.png}
+    \caption{Fehlerhafte Webcam-Ansteuerung mit Wine}
+\end{figure}
+\\Für meinen Windows\cite{win10}-PC hatte ich leider keine Webcam mehr auftreiben können.
+\paragraph{Die Realisierung} der Gesichtserkennung geschah daher schließlich per OpenSeeFace\cite{openseeface}.
+Dabei handelt es sich um ein Python\cite{python}-Script,
+das ich auf meinem Notebook nativ unter Manjaro\cite{manjaro} installiert habe\cite{tut-openseeface}.
+Dieses Script greift ebenfalls auf die Webcam zu,
+führt anhand eines zur Auswahl stehenden Erkennungs-Modells die Gesichtserkennung durch
+und versendet die daraus gewonnen Daten per Netzwerk an eine selbstgewählte IP-Adresse.
+\newpage
+\paragraph{Die installation} erfolgte durch Ausführung folgender Zeilen im Terminal\cite{tut-openseeface}.
+\begin{Verbatim}[fontsize=\small]
+    sudo pacman -S python python-pip python-virtualenv git
+    git clone https://github.com/emilianavt/OpenSeeFace
+    cd OpenSeeFace
+    virtualenv -p python3 env
+    source env/bin/activate
+    pip3 install onnxruntime opencv-python pillow numpy
+\end{Verbatim}
+\paragraph{Die Ausführung} bewerkstelligten folgende 2 Zeilen\cite{tut-openseeface}.
+\begin{Verbatim}[fontsize=\small]
+    source env/bin/activate
+    python facetracker.py
+                -c 0 -W 1280 -H 720
+                -m 4
+                --discard-after 0 --scan-every 0
+                --max-feature-updates 900
+                --no-3d-adapt 1 --model 4
+                -i 192.168.178.12 -v 3 -P 1
+\end{Verbatim}
+\textit{Weiterführende Informationen zu den einzelnen Parametern sind der Dokumentation von OpenSeeFace\cite{openseeface} zu entnehmen.}
+\paragraph{Die Rechenlast} ließ sich dadurch elegant aufteilen.
+Mein Notebook hat per OpenSeeFace\cite{openseeface} die Gesichtserkennung durchgeführt,
+während mein PC per VSeeFace\cite{vseeface} dessen Mapping auf das 3D-Modell sowie das Rendering übernommen hat.
+\paragraph{Das Mapping} funktioniert in VSeeFace\cite{vseeface} ohne weitere Anpassungen
+leider nur sehr grob und oft fehlerhaft.
+Daher ist es - insbesondere für die Emotionserkennung - zuerst notwendig,
+die Verarbeitung der Gesichtserkennungs-Daten in VSeeFace\cite{openseeface}
+zu kalibrieren.
+Dies geschieht durch Aufzeichnung verschiedener Gesichtszüge
+und muss unter Umständen vor jedem Einsatz kontrolliert und je nach Bedarf auch aufgefrischt werden\cite{tut-expressions}.
+\newpage
+
+\subsection{Handerkennung}
+\label{subsec:handtracking}
+VSeeFace\cite{vseeface} unterstützt auch eine Handerkennung per Leap Motion Controller.
+\paragraph{Unter Linux\cite{linux}} habe ich es zuerst getestet\cite{tut-leapmotion-linux}.
+\begin{enumerate}
+    \item Habe ich ein Terminal geöffnet und folgende Zeilen eingeben:
+        \begin{Verbatim}[fontsize=\small]
+            git clone https://aur.archlinux.org/leap-motion.git
+            cd leap-motion
+            makepkg -sir
+            sudo groupadd plugdev
+            sudo usermod -aG plugdev $USER
+            systemctl start leapd.service
+            LeapControlPanel
+        \end{Verbatim}
+    \item Habe ich ein weiteres Terminal geöffnet und folgendes eingeben:
+        \begin{Verbatim}[fontsize=\small]
+            sudo leapd
+        \end{Verbatim}
+\end{enumerate}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.065]{Bilder/Animation/LeapMotion.png}
+    \caption{Leap Motion Controller Test}
+\end{figure}
+\newpage
+Allerdings hat sich leider schnell herausgestellt, dass VSeeFace\cite{vseeface} unter Wine\cite{wine} offensichtlich auch nicht auf den Leap Motion Controller zugreifen kann.
+Also habe ich an diesem Punkt mit der Entwicklerin von VSeeFace\cite{vseeface} Kontakt aufgenommen\cite{vseeface-leapmotion-linux-issue} und dabei erfahren,
+dass selbst wenn man VSeeFace\cite{vseeface} für Linux\cite{linux} anpassen und kompilieren würde, die vorhandene Codebasis lediglich die Version 4 des Leap Motion SDK\cite{leapmotion-windows} unterstützt, also nicht abwärtskompatibel ist.
+Für Linux\cite{linux} wird allerdings nur die Version 2 des Leap Motion SDK\cite{leapmotion-linux} angeboten.
+Daher habe ich dann beschlossen, für die Handerkennung vorerst auf Windows\cite{win10} auszuweichen.
+\paragraph{Unter Windows\cite{win10}} musste ich lediglich das entsprechende Leap Motion SDK\cite{leapmotion-windows} installieren,
+darin den Leap Motion Controller kalibrieren
+und konnte ihn sofort in VSeeFace\cite{vseeface} nutzen.
+\\\textit{Das Leap Motion SDK erkennt übrigens bereits geringe Verschmutzungen der Sensorfläche des Controllers und informiert den Anwender hierüber.}
+\newpage
+
+\subsection{Skeletterkennung}
+\label{subsec:bodytracking}
+Für die Bewegungserkennung bezüglich des Skelett, kamen für mich im wesentlichen nur 2 Ansätze in Frage.
+\paragraph{Lediglich per Webcam} lässt sich zumindest in der Theorie bereits
+eine rudimentäre Erkennung der Skelett-Bewegungen realisieren.
+Dazu bietet sich die Software ThreeDPoseTracker\cite{threedposetracker} an\cite{tut-threedposetracker}.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.11]{Bilder/Animation/ThreeDPoseTracker.png}
+    \caption{Ausschnitt aus dem Demonstrationsvideo von ThreeDPoseTracker\cite{threedposetracker}}
+\end{figure}
+\\Leider konnte diese Software mittels Wine\cite{wine} unter Manjaro\cite{manjaro}
+ebenfalls nicht auf meine integrierte Webcam im Notebook zugreifen.
+Und da ich für meinen Windows\cite{win10}-PC keine Webcam zur Verfügung hatte,
+konnte ich diese Software vorerst auch dort nicht testen.
+Installieren ließ sie sich zumindest problemlos auf beiden Systemen.
+Der Quellcode ist auch als Unity-Projekt für nicht-kommerzielle Nutzung offen verfügbar.
+Daher lässt sich die Software mit ein paar Anpassungen
+vermutlich auch nativ für Linux\cite{linux} kompilieren.
+Jedoch habe ich an dieser Stelle
+aufgrund meines knappen Zeit-Budget diese Möglichkeit vorerst verworfen.
+\newpage
+\paragraph{Per Kinect} lassen sich ebenfalls Skelett-Bewegungen erkennen.
+Unter Manjaro\cite{manjaro} bin ich allerdings leider an der Installation der Hardware gescheitert.
+Unter Windows\cite{win10} hingegen verlief die Installation reibungslos:
+\begin{enumerate}
+    \item Installation des Kinect SDK\cite{kinect-sdk}.
+    \item Installation des Kinect Toolkit\cite{kinect-toolkit}.
+    \item Toolkit Browser öffnen.
+    \item Das C\#-Beispiele \glqq{}Skeleton Basics-WPF\grqq{} suchen und direkt ausführen.
+\end{enumerate}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.2]{Bilder/Animation/Kinect v1 Seated Mode.png}
+    \caption{Kinect v1 Skeletterkennung im \glqq{}Seated Mode\grqq{}}
+\end{figure}
+Die Einbindung der Kinect-Daten in VSeeFace\cite{vseeface} wird über die
+als Unity\cite{unity}-Projekt erstellte quelloffene Software 360KinectGum\cite{360-kinect-gum} ermöglicht.
+Diese Software nutzt die Referenzimplementierung EVMC4U\cite{evmc4u} für Unity\cite{unity}
+des VMC-Protokolls\footnote{\textbf{V}irtual \textbf{M}otion \textbf{C}apture: Schnittstellen-Protokoll (sowie gleichnamige Anwendung\cite{vmc}) für VR-Umgebungen\cite{vmc-protocol-page}}.
+Da VSeeFace\cite{vseeface} ebenfalls das VMC-Protokoll\cite{vmc-protocol-page} unterstützt,
+lassen sich somit die Kinect-Daten in VSeeFace\cite{vseeface} für die Animation des Modells mit einbeziehen.
+\\\textit{Leider habe ich die Software 360KinectGum\cite{360-kinect-gum}
+erst zum Zeitpunkt dieses Berichts entdeckt, weshalb ich diese Lösung noch nicht testen konnte.}
+\newpage
+
+\section{Fazit}
+\label{sec:conclusion}
+Das Projekt der 3D-Avatar-Animation mittels Gesichts-, Hand- und Skeletterkennung war sehr aufwändig und zeitintensiv.
+Ich habe während der intensiven Phase (ohne Vorrecherche) etwa einen Monat bei schätzungsweise insgesamt 300 Stunden darin investiert.
+Jedoch hat dieses Projekt auch viel Spaß gemacht und ich habe damit thematisch gerade erst an der Oberfläche gekratzt.
+Daher sehe ich darin noch viel Potential für eine mögliche Bachelor-Arbeit.
+
+\section{Aussicht \& Rechtliches}
+\label{sec:later}
+Zukünftig plane ich, tatsächlich mit Kumiko online zu gehen
+und habe zu diesem Zweck bereits mit Bekannten und Kommilitonen
+zusammen ein 5-köpfiges Team gegründet.
+Daher bitte ich darum,
+das 3D-Modell aus diesem Projekt nicht weiter zu verwenden.
+Außerdem bitte ich darum,
+in zukünftigen Vorlesungen kein Material zu verwenden,
+durch welches von Kumiko Rückschlüsse
+auf meine private Identität gezogen werden können
+(zum Beispiel per Name, Gesicht oder Stimme).
+Ich danke Ihnen vielmals für ihr Verständnis.
+\newpage
+
+\section{Verwendete Hardware}
+\label{sec:hardware}
+\paragraph{Notebook}
+\begin{itemize}
+    \item Hersteller: {\ttfamily Acer}
+    \item Serie: {\ttfamily Aspire V15 Nitro Black Edition}
+    \item Modell: {\ttfamily VN7-593G}
+    \item CPU: {\ttfamily Intel Core i7-7700HQ Quad-Core @ 2,8 GHz}
+    \item GPU: {\ttfamily nVidia GeForce GTX 1060 6 GB}
+    \item RAM: {\ttfamily 2x 8GB DDR4 @ 2400 MHz}
+    \item Kamera: {\ttfamily 720p, integriert}
+    \item Mikrofon: {\ttfamily Array-Mikrofon, integriert}
+\end{itemize}
+\paragraph{PC}
+\begin{itemize}
+    \item Mainboard: {\ttfamily Gigabyte B450 Aorus M}
+    \item CPU: {\ttfamily AMD Ryzen 5 2600 Hexa-Core @ 3,4 GHz}
+    \item GPU: {\ttfamily nVidia GeForce GTS 450 1 GB}
+    \item RAM: {\ttfamily 2x 8GB DDR4 @ 3000 MHz}
+    \item Kamera: {\ttfamily keine}
+    \item Mikrofon: {\ttfamily Kinect Array-Mikrofon}
+    \item Kinect: {\ttfamily v1 Model 1414} \& {\ttfamily Adapter mit Stromversorgung, USB 2.0}
+    \item Leap Motion: {\ttfamily Controller LM-010, USB 3.0}
+\end{itemize}
+
+\clearpage
+\printbibliography[heading=bibintoc]
+
+\clearpage
+\appendix
+\section{Video: Demonstration der Gesichtserkennung sowie dessen Mapping und Rendering}
+\label{sec:appendix-video-facetracking}
+Diesem Bericht liegt ein Video zur Demonstration der in Kapitel \ref{subsec:facetracking} beschriebenen Animation bei.
+
+\section{Video: Demonstration der Handerkennung sowie dessen Mapping und Rendering}
+\label{sec:appendix-video-handtracking}
+Diesem Bericht liegt ein Video zur Demonstration der in Kapitel \ref{subsec:handtracking} beschriebenen Animation bei.
+\end{document}

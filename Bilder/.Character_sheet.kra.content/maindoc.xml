@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DOC PUBLIC '-//KDE//DTD krita 2.0//EN' 'http://www.calligra.org/DTD/krita-2.0.dtd'>
+<DOC xmlns="http://www.calligra.org/DTD/krita" kritaVersion="4.4.2" syntaxVersion="2" editor="Krita">
+ <IMAGE name="Character sheet" x-res="600" colorspacename="RGBA" description="" mime="application/x-kra" profile="sRGB-elle-V2-srgbtrc.icc" width="4000" height="2000" y-res="600">
+  <layers>
+   <layer name="Description" colorlabel="7" collapsed="0" locked="0" selected="true" compositeop="normal" channelflags="" visible="1" nodetype="shapelayer" y="0" filename="layer2" x="0" uuid="{ef73c80c-1fed-49f3-9d95-3deff9ebad76}" intimeline="1" opacity="255"/>
+   <layer name="backSide" colorlabel="2" collapsed="0" locked="1" colorspacename="RGBA" compositeop="normal" channellockflags="1111" channelflags="" visible="1" nodetype="paintlayer" y="-48" filename="layer3" onionskin="0" x="0" uuid="{19d6c6a4-9352-4739-8b5d-3aeec751614c}" intimeline="1" opacity="255"/>
+   <layer name="leftSide" colorlabel="2" collapsed="0" locked="1" colorspacename="RGBA" compositeop="normal" channellockflags="1111" channelflags="" visible="1" nodetype="paintlayer" y="-48" filename="layer4" onionskin="0" x="0" uuid="{7c34adc1-ff6c-45b1-b8e1-5d3acff88aa7}" intimeline="1" opacity="255"/>
+   <layer name="frontSide" colorlabel="2" collapsed="0" locked="1" colorspacename="RGBA" compositeop="normal" channellockflags="1111" channelflags="" visible="1" nodetype="paintlayer" y="-48" filename="layer5" onionskin="0" x="0" uuid="{4473975e-52f1-4527-8cd8-a9ada12281e1}" intimeline="1" opacity="255"/>
+   <layer name="rightSide" colorlabel="2" collapsed="0" locked="1" colorspacename="RGBA" compositeop="normal" channellockflags="1111" channelflags="" visible="1" nodetype="paintlayer" y="-48" filename="layer6" onionskin="0" x="0" uuid="{935dce2b-f7e0-4689-98bf-b3b975de955a}" intimeline="1" opacity="255"/>
+  </layers>
+  <ProjectionBackgroundColor ColorData="AAAAAA=="/>
+  <GlobalAssistantsColor SimpleColorData="176,176,176,255"/>
+  <Palettes/>
+  <animation>
+   <framerate type="value" value="24"/>
+   <range to="100" type="timerange" from="0"/>
+   <currentTime type="value" value="0"/>
+  </animation>
+ </IMAGE>
+</DOC>
