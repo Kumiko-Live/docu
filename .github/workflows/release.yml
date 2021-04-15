@@ -1,0 +1,69 @@
+# GitHub Actions TeX release workflow
+#
+# Created: 2021 by Vivien Richter <vivien-richter@outlook.de>
+# License: CC BY 4.0
+# Version: 1.0.0
+name: Release
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push tag events
+  push:
+    tags:
+      - "v*.*.*"
+
+# Sets environment variables
+env:
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+
+      # Get the tag name
+      - name: Get tag name
+        run: echo "TAG_NAME=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      # Check the repository out
+      - name: Repository checkout
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+          ref: ${{ github.ref }}
+
+      # Get the release title and description by the tag message title
+      - name: Get release details
+        run: |
+          echo "TAG_SUBJECT=$(git tag -l --format='%(contents:subject)' ${{env.TAG_NAME}})" >> $GITHUB_ENV
+          echo "TAG_BODY=$(git tag -l --format='%(contents:body)' ${{env.TAG_NAME}})" >> $GITHUB_ENV
+
+      # Load the compiled PDF
+      - name: Load PDF
+        uses: dawidd6/action-download-artifact@v2.11.1
+        with:
+          workflow: build.yml
+          workflow_conclusion: success
+          name: Documentation
+          path: Documentation
+
+      # Publish the release
+      - name: Publish release
+        id: publish_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{github.ref}}
+          release_name: ${{env.TAG_SUBJECT}}
+          body: ${{env.TAG_BODY}}
+          draft: false
+          prerelease: false
+
+      # Publish the compiled PDF
+      - name: Publish PDF
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{steps.publish_release.outputs.upload_url}}
+          asset_path: Documentation/Dokumentation.pdf
+          asset_name: Dokumentation.pdf
+          asset_content_type: application/pdf
